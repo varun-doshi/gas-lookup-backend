@@ -7,9 +7,8 @@ use crate::service;
 pub async fn gas_lookup(user_data:Json<structs::UserInput>)->HttpResponse{
 
     let result=service::start_service(user_data.clone()).await;
-    println!("{:?}",result);
 
     HttpResponse::Ok()
     .content_type("application/json")
-    .json(user_data)
+    .json(result)
 }

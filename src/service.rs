@@ -1,9 +1,7 @@
-use actix_web::web::Json;
 use chrono::prelude::*;
 use ethers::{types::{Chain, H160}, etherscan::{Client, account::{TxListParams, Sort}}};
 use dotenv::dotenv;
-use serde::de::Error;
-use web3::futures::future::ok;  
+
 
 use crate::structs;
 
@@ -11,15 +9,12 @@ pub async fn start_service(user_date:structs::UserInput)->Option<f64> {
     dotenv().ok();
 
     let start_block=foramt_date(&user_date.start_date).await;
-    // println!("{}{}","Selected Start Block:".blue(),start_block);
     let end_block=foramt_date(&user_date.end_date).await;
-    // println!("{}{}","Selected End Block:".blue(),end_block);
 
     
     let result =fetch_gas(&user_date.address,start_block,end_block).await.unwrap();
 
     return Some(result)
-
 
 }
 
@@ -97,18 +92,10 @@ async fn fetch_gas(eth:&str,start_block:u64,end_block:u64)->Result<f64, Box<dyn 
         let gas_price=txns[txn].gas_price.unwrap().as_u128() as f64;
         let gwei_gas_price:f64=gas_price/1000000000.0;
         let gas_used=txns[0].gas_used.as_u64() as f64;
-        // println!("{}{}","Showing txn:".blue(),txn);
-        // println!("Txn Hash:{:?} ",txns[txn].hash.value().unwrap());
-        // println!("{:?}",gwei_gas_price);
-        // println!("{:?}",gas_used);
         
         let total_gas=gwei_gas_price*gas_used;
-        // println!("Gas Spent:{:?}",total_gas);
-        cumulative_gas_used+=total_gas;
-        // println!("{}{}","Updated value: ".yellow(),cumulative_gas_used);
-    }
 
-    println!("{}{}{}","Total Gas Spent:",cumulative_gas_used," GWEI");
+        cumulative_gas_used+=total_gas;
+    }
     return Ok(cumulative_gas_used);
-    // Ok(())
 }

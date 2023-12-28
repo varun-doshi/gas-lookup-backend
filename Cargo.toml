@@ -17,3 +17,4 @@ chrono = "0.4.22"
 web3 = {version="0.18.0",default-features = false,features = ["_http_base","async-native-tls","base64","bytes","headers","http","http-tls","ipc-tokio","once_cell","secp256k1"]}
 # colored = "2.0.4"
 dotenv = "0.15.0"
+actix-cors = "0.6.5"
